@@ -1,6 +1,7 @@
 "use client";
 
-// import { signIn } from "next-auth/react";
+import { signIn } from "@/lib/auth-client";
+
 import Link from "next/link";
 
 export default function AuthPage() {
@@ -18,7 +19,12 @@ export default function AuthPage() {
         </div>
 
         <button
-        //   onClick={() => signIn("google", { callbackUrl: "/onboarding" })}
+          onClick={async () => {
+          await signIn.social({
+            provider: "google",
+            callbackURL: "/onboarding", 
+          });
+        }}
           className="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold py-4 px-6 rounded-2xl transition-all active:scale-[0.98]"
         >
           <svg width="20" height="20" viewBox="0 0 24 24">
