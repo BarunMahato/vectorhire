@@ -7,8 +7,12 @@ export default async function OnboardingLayout({ children }: { children: React.R
     headers: await headers(),
   });
 
-  if (session?.user.role === "STUDENT") redirect("/dashboard/student");
-  if (session?.user.role === "RECRUITER") redirect("/dashboard/recruiter");
+  if (!session) redirect("/auth");
 
-  return <>{children}</>;
+  const user = session.user as any;
+
+  if (user.role === "STUDENT") redirect("/dashboard/student");
+  if (user.role === "RECRUITER") redirect("/dashboard/recruiter");
+
+  return <div className="min-h-screen bg-white">{children}</div>;
 }

@@ -56,10 +56,11 @@ export default function OnboardingPage() {
 function OnboardingForm({ role }: { role: "STUDENT" | "RECRUITER" }) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
+    targetRole: "",      
+    experience: "Entry", 
     skills: "",
     salary: "",
     location: "Remote",
-    experience: "Entry",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -74,57 +75,40 @@ function OnboardingForm({ role }: { role: "STUDENT" | "RECRUITER" }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 animate-in fade-in zoom-in-95">
-      <h2 className="text-2xl font-bold mb-6 text-slate-900">
-        {role === "STUDENT" ? "Configure your Agent" : "Company Requirements"}
-      </h2>
-
-
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
+        
         <div>
           <label className="text-sm font-bold text-slate-700 block mb-1">
-            {role === "STUDENT" ? "Primary Skills (e.g. Next.js, Java)" : "Hiring Role"}
+            Desired Role
           </label>
           <input
+            placeholder="e.g. Software Engineer, Data Analyst"
             required
-            className="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"
-            onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
+            className="w-full p-3 rounded-xl border border-slate-200"
+            onChange={(e) => setFormData({ ...formData, targetRole: e.target.value })}
           />
         </div>
 
+      
         <div>
-          <label className="text-sm font-bold text-slate-700 block mb-1">
-            {role === "STUDENT" ? "Expected Monthly Stipend (INR)" : "Budget Range"}
-          </label>
-          <input
-            required
-            type="number"
-            className="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"
-            onChange={(e) => setFormData({ ...formData, salary: e.target.value })}
-          />
-        </div>
-
-        <div>
-          <label className="text-sm font-bold text-slate-700 block mb-1">Preferred Setting</label>
+          <label className="text-sm font-bold text-slate-700 block mb-1">Experience Level</label>
           <select 
-            className="w-full p-3 rounded-xl border border-slate-200 outline-none"
-            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+            className="w-full p-3 rounded-xl border border-slate-200"
+            onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
           >
-            <option value="Remote">Remote</option>
-            <option value="In-office">In-office</option>
-            <option value="Hybrid">Hybrid</option>
+            <option value="Internship">Internship</option>
+            <option value="Entry">Entry Level (0-2 years)</option>
+            <option value="Junior">Junior (2-4 years)</option>
+            <option value="Mid">Mid Level</option>
           </select>
         </div>
+
+      
       </div>
 
-      <button
-        disabled={loading}
-        type="submit"
-        className={`w-full py-4 rounded-xl font-bold text-white transition-all shadow-lg active:scale-95 ${
-          role === "STUDENT" ? "bg-blue-600 shadow-blue-100" : "bg-green-600 shadow-green-100"
-        }`}
-      >
-        {loading ? "Initializing..." : "Complete Setup →"}
+      <button type="submit" disabled={loading} className="...">
+        {loading ? "Saving..." : "Complete Setup"}
       </button>
     </form>
   );
