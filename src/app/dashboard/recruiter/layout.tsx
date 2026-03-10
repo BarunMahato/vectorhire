@@ -4,7 +4,7 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client"; 
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion"; // Added AnimatePresence
+import { motion, AnimatePresence } from "framer-motion"; 
 import { Users, Search, Mail, Settings, LogOut, Zap, LayoutDashboard } from "lucide-react";
 
 export default function RecruiterLayout({ children }: { children: React.ReactNode }) {

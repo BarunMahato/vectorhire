@@ -22,6 +22,7 @@ model User {
   
 
   role          Role      @default(USER)
+  resumeUrl    String?    @default("")
   preferences   Json?     @default("{}")
 
   createdAt     DateTime  @default(now())
