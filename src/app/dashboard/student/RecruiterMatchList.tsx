@@ -12,16 +12,18 @@ export default function RecruiterMatchList({ recruiters, studentId }: { recruite
     
     try {
       // THIS CALLS YOUR n8n WEBHOOK
-      const response = await fetch("https://YOUR_N8N_URL/webhook/create-draft", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          studentId: studentId,
-          recruiterEmail: recruiter.email,
-          recruiterName: recruiter.name,
-          role: recruiter.preferences?.targetRole
-        }),
-      });
+      const response = await fetch("http://localhost:5678/webhook-test/create-draft", {
+  method: "POST",
+  headers: { 
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    studentId,
+    recruiterEmail: recruiter.email,
+    recruiterName: recruiter.name,
+    role: recruiter.preferences?.targetRole || "Software Engineer",
+  }),
+});
 
       if (response.ok) {
         setDoneId(recruiter.id);
@@ -43,6 +45,7 @@ export default function RecruiterMatchList({ recruiters, studentId }: { recruite
             </div>
             <div>
               <h3 className="font-black text-slate-900">{r.name}</h3>
+              <p className="text-xs text-blue-500 font-mono">{r.email}</p>
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Hiring for {r.preferences?.targetRole}</p>
             </div>
           </div>

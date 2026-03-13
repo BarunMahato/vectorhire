@@ -1,14 +1,12 @@
 "use client";
 import { useUploadThing } from "@/lib/uploadthing"; 
-import {Upload, CheckCircle2, X } from "lucide-react";
+import {Upload, CheckCircle2} from "lucide-react";
 import { useState } from "react";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Briefcase, Sparkles, ChevronRight, FileText, CheckCircle, Loader2 } from "lucide-react";
-import { submitOnboarding } from "./action";
-import { UploadButton } from "@uploadthing/react";
-import type { OurFileRouter } from "@/app/api/uploadthing/core";
+import { Sparkles, ChevronRight, FileText, Loader2 } from "lucide-react";
+import { submitOnboarding } from "@/actions/onboarding";
 
 export function ResumeUploadSection({ onUploadComplete }: { onUploadComplete: (url: string) => void }) {
   const [progress, setProgress] = useState(0);
@@ -35,7 +33,7 @@ export function ResumeUploadSection({ onUploadComplete }: { onUploadComplete: (u
     const file = e.target.files?.[0];
     if (!file) return;
     setFileName(file.name);
-    setStartTime(Date.now()); // Start timer
+    setStartTime(Date.now()); 
     await startUpload([file]);
   };
 

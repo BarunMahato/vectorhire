@@ -80,4 +80,16 @@ model Verification {
   updatedAt  DateTime? @updatedAt
 
   @@map("verifications")
+  
+}
+
+model ExternalJob {
+  id          String   @id @default(cuid())
+  studentId   String
+  title       String   // e.g. "Junior Web Dev"
+  company     String   // e.g. "Google"
+  platform    String   // e.g. "LinkedIn"
+  url         String   // Link to the post
+  aiDraft     String?  @db.Text // The pre-written email Maya made
+  status      String   @default("PENDING") // PENDING, APPLIED, DISMISSED
 }
