@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, Loader2, Power, Zap, Radio } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import {Loader2, Zap, Radio } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useSession } from "@/lib/auth-client"; // Using your project's auth client
 
