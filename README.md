@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VectorHire 🛰️ 
 
-## Getting Started
+**VectorHire** is an AI-driven recruitment intelligence platform designed to bridge the gap between candidate resumes and real-time market opportunities. Featuring **Agent Maya**, an autonomous discovery engine, the system crawls professional networks to find, index, and draft applications for high-probability job matches.
 
-First, run the development server:
+## 🚀 Key Features
+- **Agent Maya:** An autonomous agent powered by n8n and Gemini LLM that crawls the web for job listings based on your specific resume context.
+- **Neural Sync:** Seamless synchronization between low-code automation (n8n) and a high-performance Next.js/Prisma/PostgreSQL backend.
+- **Dynamic Dashboard:** Glassmorphic UI built with Tailwind CSS and Framer Motion for real-time visualization of job discoveries.
+- **Secure Authentication:** Robust user management and session handling via Better Auth.
+
+## 🛠️ Tech Stack
+- **Frontend:** Next.js 15+ (App Router), Tailwind CSS, Framer Motion, Lucide Icons.
+- **Backend:** Node.js, Prisma ORM, PostgreSQL.
+- **Automation:** n8n (Self-hosted), Gemini 1.5 Flash (via Google AI Studio).
+- **Communication:** RESTful APIs, Webhooks.
+
+## ⚙️ Architecture & n8n Integration
+VectorHire uses a distributed architecture to handle heavy web-crawling tasks without blocking the main application thread.
+
+1. **Trigger:** The user initiates a "Global Hunt" from the Next.js dashboard.
+2. **Webhook:** Next.js sends a secure POST request to an **n8n Webhook node**.
+3. **Intelligence:** n8n parses the resume URL, uses **Gemini** to extract keywords, and executes a search via **SerpApi/Google Jobs**.
+4. **Ingestion:** n8n cleans the results and sends a bulk JSON payload back to the `/api/agent/external` endpoint.
+5. **Persistence:** The Next.js backend performs a high-efficiency `createMany` operation with `skipDuplicates` logic in Prisma.
+
+## 📦 Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/BarunMahato/vectorhire.git](https://github.com/BarunMahato/vectorhire.git)
+   cd vectorhire
+2. **Install dependencies:**
+
+Bash
+npm install
+Set up Environment Variables:
+Create a .env file:
+
+Code snippet
+DATABASE_URL="your-postgresql-url"
+AGENT_SECRET_KEY="your-secure-key"
+BETTER_AUTH_SECRET="your-auth-secret"
+Run Migrations:
+
+Bash
+npx prisma migrate dev
+npm run dev
+🛡️ License
+MIT
+
+
+### 3. Final Push to GitHub
+
+Now that you have the README, here is how to push it and your code:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+git add README.md
+git add .
+git commit -m "docs: added professional readme and architectural overview"
+git push origin main
