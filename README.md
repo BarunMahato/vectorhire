@@ -1,5 +1,3 @@
-Here is the clean, high-quality **README.md** incorporating your specific workflow image filenames. You can copy and paste this directly into your project.
-
 # VectorHire 🛰️
 
 **VectorHire** is an AI-driven recruitment intelligence platform designed to bridge the gap between candidate resumes and real-time market opportunities. Featuring **Agent Maya**, an autonomous discovery engine, the system crawls professional networks to find, index, and draft applications for high-probability job matches.
