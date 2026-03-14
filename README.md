@@ -9,7 +9,8 @@ Here is the clean, high-quality **README.md** incorporating your specific workfl
 ### 1. Discovery Engine (Hunt & Sync)
 
 Maya analyzes your resume context to perform deep-crawls across professional networks, indexing leads directly into a PostgreSQL cluster.
-![Discovery Workflow](./public/assets/job-search&update-workflow.png)
+
+![Discovery Workflow](./public/assets/job-search&&update-workflow.png)
 
 
 ### 2. Action Engine (Draft & Personalize)
