@@ -70,7 +70,10 @@ export default function StudentDashboardLayout({ children }: { children: React.R
         {/* --- DYNAMIC MAYA AUTOPILOT CONTROL --- */}
         <div className="px-4 mb-4">
           {session?.user?.id ? (
-            <SidebarAgentControl studentId={session.user.id} />
+            <SidebarAgentControl 
+  studentId={session?.user?.id || ""} 
+  resumeUrl={(session?.user as any)?.resumeUrl || ""} 
+/>
           ) : (
             <div className="h-32 w-full bg-slate-50 animate-pulse rounded-3xl" />
           )}

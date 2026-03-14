@@ -8,23 +8,35 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await req.json();
-    const { studentId, title, company, platform, url, aiDraft } = body;
+    const { studentId, jobs } = await req.json();
 
-    const job = await prisma.externalJob.create({
-      data: {
+    if (!studentId || !Array.isArray(jobs)) {
+      return NextResponse.json({ error: "Invalid Payload" }, { status: 400 });
+    }
+
+    // High-Efficiency Bulk Insert
+    // This sends ONE single command to the DB instead of 10.
+    const result = await prisma.externalJob.createMany({
+      data: jobs.map((job: any) => ({
         studentId,
-        title,
-        company,
-        platform,
-        url,
-        aiDraft: aiDraft || "",
-        status: "PENDING",
-      },
+        title: job.title,
+        company: job.company,
+        url: job.url,
+        location: job.location || "India",
+        platform: job.platform || "LinkedIn",
+        status: "FOUND",
+      })),
+      skipDuplicates: true, // This is the "Upsert" behavior—it won't crash on existing URLs
     });
 
-    return NextResponse.json({ success: true, jobId: job.id });
-  } catch (error) {
-    return NextResponse.json({ error: "Storage Failed" }, { status: 500 });
+    return NextResponse.json({ 
+      success: true, 
+      count: result.count,
+      message: `Maya synced ${result.count} new jobs.` 
+    });
+
+  } catch (error: any) {
+    console.error("MAYA_SYNC_CRITICAL_ERROR:", error);
+    return NextResponse.json({ error: "Sync Failed", details: error.message }, { status: 500 });
   }
 }

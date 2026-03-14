@@ -19,7 +19,7 @@ export default function RecruiterMatchList({ recruiters, studentId }: { recruite
     setLoadingId(recruiter.id);
     try {
       // THIS CALLS YOUR n8n WEBHOOK
-      const response = await fetch("https://YOUR_N8N_URL/webhook/create-draft", {
+      const response = await fetch("http://localhost:5678/webhook-test/create-draft", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

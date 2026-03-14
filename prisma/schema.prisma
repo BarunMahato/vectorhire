@@ -32,6 +32,7 @@ model User {
   accounts      Account[]
 
   @@map("users")
+  externalJobs  ExternalJob[]
 }
 
 model Session {
@@ -84,12 +85,19 @@ model Verification {
 }
 
 model ExternalJob {
-  id          String   @id @default(cuid())
-  studentId   String
-  title       String   // e.g. "Junior Web Dev"
-  company     String   // e.g. "Google"
-  platform    String   // e.g. "LinkedIn"
-  url         String   // Link to the post
-  aiDraft     String?  @db.Text // The pre-written email Maya made
-  status      String   @default("PENDING") // PENDING, APPLIED, DISMISSED
+  id        String   @id @default(cuid())
+  studentId String
+  title     String
+  company   String
+  url       String   @unique
+  location  String?
+  platform  String   @default("LinkedIn")
+  status    String   @default("FOUND") // FOUND, APPLIED, REJECTED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationship to your User model
+  user      User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
 }
