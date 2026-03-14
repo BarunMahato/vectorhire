@@ -29,12 +29,15 @@ VectorHire uses a distributed architecture to handle heavy web-crawling tasks wi
    ```bash
    git clone [https://github.com/BarunMahato/vectorhire.git](https://github.com/BarunMahato/vectorhire.git)
    cd vectorhire
+
 2. **Install dependencies:**
 
-Bash
-npm install
-Set up Environment Variables:
-Create a .env file:
+    ```bash
+    npm install
+
+3. **Set up Environment Variables:**
+
+    Create a .env file:
 
 Code snippet
 DATABASE_URL="your-postgresql-url"
@@ -42,9 +45,11 @@ AGENT_SECRET_KEY="your-secure-key"
 BETTER_AUTH_SECRET="your-auth-secret"
 Run Migrations:
 
-Bash
-npx prisma migrate dev
-npm run dev
+    ```bash
+    npx prisma migrate dev
+    npm run dev
+
+    
 🛡️ License
 MIT
 
