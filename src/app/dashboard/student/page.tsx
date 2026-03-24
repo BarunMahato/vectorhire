@@ -9,23 +9,26 @@ export default async function StudentDashboard() {
 
   if (!session || session.user.role !== "STUDENT") redirect("/auth");
 
-  const studentPrefs = (session.user.preferences as any) || {};
-  const myRole = studentPrefs.targetRole || "";
+  // Cast user to any to access custom fields safely
+  const user = session.user as any;
+  const myRole = user.targetRole || "";
 
-  // 1. Fetch recruiters hiring for MY role
+  // 1. Fetch recruiters matching the student's target role
   const matches = await prisma.user.findMany({
     where: {
       role: "RECRUITER",
-      preferences: {
-        path: ["targetRole"],
-        string_contains: myRole,
+      targetRole: {
+        contains: myRole,
+        mode: 'insensitive',
       },
     },
     select: {
       id: true,
       name: true,
       email: true,
-      preferences: true,
+      companyName: true,
+      jdUrl: true,
+      targetRole: true,
     },
     take: 10,
   });
@@ -33,11 +36,18 @@ export default async function StudentDashboard() {
   return (
     <div className="max-w-5xl mx-auto py-12 px-6">
       <div className="mb-10">
-        <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Your AI Matchmaker</h1>
-        <p className="text-slate-500 font-medium">Vector found these recruiters hiring for <span className="text-blue-600 font-bold">{myRole}</span></p>
+        <h1 className="text-4xl font-black text-slate-900 tracking-tighter italic">Your AI Matchmaker</h1>
+        <p className="text-slate-500 font-medium">
+          VectorHire found these recruiters hiring for <span className="text-blue-600 font-bold underline decoration-2 underline-offset-4">{myRole}</span>
+        </p>
       </div>
 
-      <RecruiterMatchList recruiters={matches} studentId={session.user.id} />
+      {/* Pass myRole here to fix the prop error */}
+      <RecruiterMatchList 
+        recruiters={matches as any[]} 
+        studentId={session.user.id} 
+        myRole={myRole} 
+      />
     </div>
   );
 }

@@ -1,18 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { authClient, useSession } from "@/lib/auth-client"; // Added useSession
+import { authClient, useSession } from "@/lib/auth-client"; 
 import { useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { UserCircle, Bot, Briefcase, Settings, LogOut, Zap } from "lucide-react";
-import { SidebarAgentControl } from "@/components/Sidebar"; // Adjust path as needed
+import { SidebarAgentControl } from "@/components/Sidebar";
 
 export default function StudentDashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   
-  // 1. Get the current session to pass studentId to the Agent Control
-  const { data: session } = useSession();
+  // 1. Get the current session
+  const { data: session, isPending } = useSession();
 
   const handleSignOut = async () => {
     await authClient.signOut({
@@ -23,6 +23,9 @@ export default function StudentDashboardLayout({ children }: { children: React.R
       },
     });
   };
+
+  // Helper to cast user and avoid "property does not exist" errors
+  const user = session?.user as any;
 
   return (
     <div className="flex min-h-screen bg-[#F8FAFC]">
@@ -36,22 +39,24 @@ export default function StudentDashboardLayout({ children }: { children: React.R
             <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-200 group-hover:rotate-12 transition-transform">
               <Zap size={20} className="text-white fill-white" />
             </div>
-            <span className="font-black text-xl text-slate-900 tracking-tight">Vector<span className="text-blue-600">Hire</span></span>
+            <span className="font-black text-xl text-slate-900 tracking-tight">
+              Vector<span className="text-blue-600">Hire</span>
+            </span>
           </Link>
         </div>
 
         <nav className="flex-1 px-4 space-y-2">
           <NavItem 
+            href="/dashboard/student" 
+            icon={<Briefcase size={20} />} 
+            label="Matches" 
+            active={pathname === "/dashboard/student"} 
+          />
+          <NavItem 
             href="/dashboard/student/ai-agent" 
             icon={<Bot size={20} />} 
             label="AI Agent" 
             active={pathname === "/dashboard/student/ai-agent"} 
-          />
-          <NavItem 
-            href="/dashboard/student/matches" 
-            icon={<Briefcase size={20} />} 
-            label="Matches" 
-            active={pathname === "/dashboard/student/matches"} 
           />
           <NavItem 
             href="/dashboard/student/profile" 
@@ -67,13 +72,14 @@ export default function StudentDashboardLayout({ children }: { children: React.R
           />
         </nav>
 
-        {/* --- DYNAMIC MAYA AUTOPILOT CONTROL --- */}
+        {/* --- DYNAMIC AGENT CONTROL --- */}
         <div className="px-4 mb-4">
-          {session?.user?.id ? (
+          {/* We check for session.user.id and ensure it's a string to fix line 55 */}
+          {!isPending && session?.user?.id ? (
             <SidebarAgentControl 
-  studentId={session?.user?.id || ""} 
-  resumeUrl={(session?.user as any)?.resumeUrl || ""} 
-/>
+              studentId={String(session.user.id)} 
+              resumeUrl={user?.resumeUrl || ""} 
+            />
           ) : (
             <div className="h-32 w-full bg-slate-50 animate-pulse rounded-3xl" />
           )}
@@ -90,7 +96,7 @@ export default function StudentDashboardLayout({ children }: { children: React.R
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-10 shrink-0">
           <h1 className="font-black text-slate-800 text-sm uppercase tracking-widest italic">
-            {pathname.split('/').pop()?.replace('-', ' ')}
+            {pathname.split('/').pop()?.replace('-', ' ') || "Dashboard"}
           </h1>
           <div className="flex items-center gap-4">
              <div className="w-10 h-10 rounded-full bg-blue-100 border-2 border-white shadow-sm flex items-center justify-center font-bold text-blue-600">
@@ -119,14 +125,7 @@ export default function StudentDashboardLayout({ children }: { children: React.R
   );
 }
 
-interface NavItemProps {
-  href: string;
-  icon: React.ReactNode;
-  label: string;
-  active: boolean;
-}
-
-function NavItem({ href, icon, label, active }: NavItemProps) {
+function NavItem({ href, icon, label, active }: { href: string; icon: React.ReactNode; label: string; active: boolean }) {
   return (
     <Link
       href={href}
@@ -134,7 +133,6 @@ function NavItem({ href, icon, label, active }: NavItemProps) {
         active ? "text-blue-600" : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
       }`}
     >
-     
       <AnimatePresence>
         {active && (
           <motion.div 
@@ -142,26 +140,14 @@ function NavItem({ href, icon, label, active }: NavItemProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-blue-50/80 -z-10"
-            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+            className="absolute inset-0 bg-blue-50/80 -z-10 rounded-2xl"
           />
         )}
       </AnimatePresence>
-
-    
       <span className={`transition-transform duration-200 ${active ? "text-blue-600 scale-110" : "text-slate-400"}`}>
         {icon}
       </span>
       <span className="tracking-tight">{label}</span>
-
-     
-      {active && (
-        <motion.div 
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="ml-auto w-1.5 h-1.5 bg-blue-600 rounded-full shadow-[0_0_8px_rgba(37,99,235,0.5)]"
-        />
-      )}
     </Link>
   );
 }

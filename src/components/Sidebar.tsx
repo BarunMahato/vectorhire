@@ -1,45 +1,43 @@
 "use client";
 
 import { useState } from "react";
-import {Loader2, Zap, Radio } from "lucide-react";
+import { Loader2, Zap, Radio } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { useSession } from "@/lib/auth-client"; // Using your project's auth client
 
-export function SidebarAgentControl() {
+// Updated to accept props from the Layout
+interface SidebarAgentProps {
+  studentId: string;
+  resumeUrl: string;
+}
+
+export function SidebarAgentControl({ studentId, resumeUrl }: SidebarAgentProps) {
   const [isHunting, setIsHunting] = useState(false);
-  const { data: session, isPending } = useSession();
 
   const handleToggle = async () => {
-    // 1. Session Check
-    if (isPending) return; // Wait if session is still loading
-    
-    if (!session?.user) {
-      toast.error("Please login to deploy Maya.");
+    // 1. Validation Check
+    if (!studentId) {
+      toast.error("User ID not found.");
       return;
     }
 
-    // 2. Local State Toggle
+    // 2. Local State Toggle (Deactivate)
     if (isHunting) {
       setIsHunting(false);
       toast("Maya Deactivated", { icon: '🛰️' });
       return;
     }
 
-    // 3. Extract fresh data directly from session
-    const studentId = session.user.id;
-    const resumeUrl = (session.user as any).preferences?.resumeUrl;
-
+    // 3. Check for Resume
     if (!resumeUrl) {
       toast.error("Resume not found. Upload it in Profile first.");
       return;
     }
 
-    // 4. Update UI instantly
+    // 4. Update UI & Fetch
     setIsHunting(true);
     const loadingToast = toast.loading("Maya: Establishing Link...");
 
     try {
-      // 5. Execute Fetch with the freshly pulled session data
       const response = await fetch("http://localhost:5678/webhook-test/external-hunt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -88,7 +86,6 @@ export function SidebarAgentControl() {
           <button 
             type="button"
             onClick={handleToggle}
-            disabled={isPending}
             className={`w-full py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 active:scale-95 ${
               isHunting ? "bg-white text-blue-600" : "bg-blue-600 text-white"
             }`}

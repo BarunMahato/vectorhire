@@ -20,9 +20,14 @@ model User {
   emailVerified Boolean
   image         String?
   
-
   role          Role      @default(USER)
-  resumeUrl    String?    @default("")
+  
+  resumeUrl     String?    @default("")
+  
+  companyName   String?    @default("")
+  jdUrl         String?    @default("") 
+  targetRole    String?    @default("") 
+  
   preferences   Json?     @default("{}")
 
   createdAt     DateTime  @default(now())
@@ -30,9 +35,9 @@ model User {
 
   sessions      Session[]
   accounts      Account[]
+  externalJobs  ExternalJob[]
 
   @@map("users")
-  externalJobs  ExternalJob[]
 }
 
 model Session {

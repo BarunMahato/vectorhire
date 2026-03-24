@@ -13,17 +13,27 @@ export async function submitOnboarding(role: "STUDENT" | "RECRUITER", data: any)
     throw new Error("Unauthorized");
   }
 
-  // Update both the role AND the resumeUrl explicitly
+  const updateData: any = {
+    role: role,
+    targetRole: data.targetRole || "",
+   
+    ...(role === "STUDENT" 
+      ? { resumeUrl: data.fileUrl || "" } 
+      : { jdUrl: data.fileUrl || "", companyName: data.companyName || "" }
+    ),
+  
+    preferences: {
+      skills: data.skills || "",
+      workMode: data.workMode || "Remote",
+      location: data.location || "Bengaluru",
+      experience: data.experience || "Entry",
+    },
+  };
+
   await prisma.user.update({
     where: { id: session.user.id },
-    data: {
-      role: role,
-      resumeUrl: data.resumeUrl || "", // Extract this from the payload
-      preferences: data, 
-    },
+    data: updateData,
   });
 
-  // DO NOT use redirect() inside the server action if you are calling it 
-  // from a try/catch in the client. Return success instead.
   return { success: true, role };
 }

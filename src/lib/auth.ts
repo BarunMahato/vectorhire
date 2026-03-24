@@ -15,6 +15,10 @@ export const auth = betterAuth({
     },
     user: {
         additionalFields: {
+            targetRole: { type: "string" },
+            resumeUrl: { type: "string" },
+            jdUrl: { type: "string" },
+            companyName: { type: "string" },
             role: { type: "string" },
             preferences: { type: "string" },
         }
