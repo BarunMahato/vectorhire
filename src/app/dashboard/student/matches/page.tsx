@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import RecruiterMatchList from "../RecruiterMatchList"; 
-import { Briefcase, Zap } from "lucide-react";
+import { Zap } from "lucide-react";
 
 export default async function MatchesPage() {
   const session = await auth.api.getSession({
@@ -14,23 +14,30 @@ export default async function MatchesPage() {
     redirect("/auth");
   }
 
-  const studentPrefs = (session.user.preferences as any) || {};
-  const myRole = studentPrefs.targetRole || "";
+  // 1. Fetch FRESH data from DB to ensure we have the new targetRole column
+  const fullUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { targetRole: true }
+  });
 
-  // Fetch recruiters whose targetRole matches the student's targetRole
+  const myRole = fullUser?.targetRole || "";
+
+  // 2. Updated Query: Using the new top-level columns instead of JSON path
   const matches = await prisma.user.findMany({
     where: {
       role: "RECRUITER",
-      preferences: {
-        path: ["targetRole"],
-        string_contains: myRole,
+      targetRole: {
+        contains: myRole,
+        mode: 'insensitive',
       },
     },
     select: {
       id: true,
       name: true,
       email: true,
-      preferences: true,
+      companyName: true, // Required for your new RecruiterMatchList UI
+      jdUrl: true,       // Required for n8n RAG draft generation
+      targetRole: true,
     },
     take: 15,
   });
@@ -44,7 +51,7 @@ export default async function MatchesPage() {
           </span>
           <h1 className="text-4xl font-black tracking-tighter italic mb-2">Direct Matches</h1>
           <p className="text-slate-400 font-medium max-w-md">
-            Maya found <span className="text-white font-bold">{matches.length} recruiters</span> currently hiring for <span className="text-blue-400 italic">"{myRole}"</span>.
+            Maya found <span className="text-white font-bold">{matches.length} recruiters</span> currently hiring for <span className="text-blue-400 italic">"{myRole || "Roles"}"</span>.
           </p>
         </div>
         <Zap className="absolute right-[-20px] bottom-[-20px] text-white/5 w-64 h-64" />
@@ -56,7 +63,11 @@ export default async function MatchesPage() {
         </div>
 
         {matches.length > 0 ? (
-          <RecruiterMatchList recruiters={matches} studentId={session.user.id} />
+          <RecruiterMatchList 
+            recruiters={matches as any[]} 
+            studentId={session.user.id} 
+            myRole={myRole} // Added missing prop to fix red line
+          />
         ) : (
           <div className="p-20 border-2 border-dashed border-slate-200 rounded-[40px] text-center bg-white">
             <p className="text-slate-400 font-bold italic">No direct matches found. Try adjusting your role in Profile.</p>

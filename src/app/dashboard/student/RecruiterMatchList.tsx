@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Sparkles, Loader2, CheckCircle } from "lucide-react";
+import { useSession } from "@/lib/auth-client"; // Grab session for resumeUrl
 
 interface Recruiter {
   id: string;
@@ -21,22 +22,35 @@ export default function RecruiterMatchList({
   studentId: string,
   myRole: string 
 }) {
+  const { data: session } = useSession();
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [doneId, setDoneId] = useState<string | null>(null);
 
   const triggerAgentDraft = async (recruiter: Recruiter) => {
+    // Automatically get resumeUrl from the student's session
+    const resumeUrl = (session?.user as any)?.resumeUrl;
+
+    if (!resumeUrl) {
+      alert("Please upload your resume in Profile settings before creating a draft!");
+      return;
+    }
+
     setLoadingId(recruiter.id);
     
     try {
+      // Sending full context to n8n for the RAG pipeline
       const response = await fetch("http://localhost:5678/webhook-test/create-draft", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           studentId,
+          resumeUrl,
           recruiterId: recruiter.id,
           jdUrl: recruiter.jdUrl,
           companyName: recruiter.companyName,
-          targetRole: recruiter.targetRole,
+          targetRole: recruiter.targetRole || myRole,
         }),
       });
 
@@ -72,7 +86,7 @@ export default function RecruiterMatchList({
              onClick={() => triggerAgentDraft(r)}
              disabled={loadingId === r.id || doneId === r.id}
              className={`relative flex items-center gap-2 px-8 py-4 rounded-[20px] font-black text-sm transition-all ${
-               doneId === r.id ? "bg-emerald-500 text-white" : "bg-slate-900 text-white hover:bg-blue-600"
+               doneId === r.id ? "bg-emerald-500 text-white" : "bg-slate-900 text-white hover:bg-blue-600 active:scale-95"
              }`}
           >
             {loadingId === r.id ? <Loader2 className="animate-spin" size={16} /> : doneId === r.id ? <CheckCircle size={16} /> : <Sparkles size={16} />}
