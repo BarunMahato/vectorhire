@@ -17,6 +17,10 @@ Once a job is found, Maya utilizes the job description and your neural profile t
 ![Drafting Workflow](./public/assets/creating-draft-workflow.png)
 
 
+### 3. AI Carrer Assistant Workflow
+
+A chatbot feature
+![Drafting Workflow](./public/assets/ai-career-assistant-workflow.png)
 ---
 
 ## 🚀 Key Features
