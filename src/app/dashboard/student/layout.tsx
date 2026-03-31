@@ -4,7 +4,7 @@ import Link from "next/link";
 import { authClient, useSession } from "@/lib/auth-client"; 
 import { useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { UserCircle, Bot, Briefcase, Settings, LogOut, Zap, Brain } from "lucide-react";
+import { UserCircle, Bot, Briefcase, Settings, LogOut, Zap, Brain, Mic } from "lucide-react";
 import { SidebarAgentControl } from "@/components/Sidebar";
 
 export default function StudentDashboardLayout({ children }: { children: React.ReactNode }) {
@@ -75,6 +75,12 @@ export default function StudentDashboardLayout({ children }: { children: React.R
             icon={<Brain size={20} />} 
             label="AI Career Assistant" 
             active={pathname === "/dashboard/student/career-assistant"} 
+          />
+          <NavItem 
+            href="/dashboard/student/mock-interview" 
+            icon={<Mic size={20} />} 
+            label="Mock Interview" 
+            active={pathname === "/dashboard/student/mock-interview"} 
           />
         </nav>
 
