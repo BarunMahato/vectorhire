@@ -35,11 +35,6 @@ export default function RecruiterLayout({ children }: { children: React.ReactNod
 
         <nav className="flex-1 px-4 space-y-2">
           <NavItem href="/dashboard/recruiter" icon={<LayoutDashboard size={20} />} label="Overview" active={pathname === "/dashboard/recruiter"} />
-          <NavItem href="/dashboard/recruiter/search" icon={<Search size={20} />} label="Find Talent" active={pathname === "/dashboard/recruiter/search"} />
-          <NavItem href="/dashboard/recruiter/shortlist" icon={<Users size={20} />} label="Shortlist" active={pathname === "/dashboard/recruiter/shortlist"} />
-          <NavItem href="/dashboard/recruiter/messages" icon={<Mail size={20} />} label="Interviews" active={pathname === "/dashboard/recruiter/messages"} />
-          {/* NOW USING SETTINGS */}
-          <NavItem href="/dashboard/recruiter/settings" icon={<Settings size={20} />} label="Settings" active={pathname === "/dashboard/recruiter/settings"} />
         </nav>
 
         <div className="p-6 border-t border-slate-100">
