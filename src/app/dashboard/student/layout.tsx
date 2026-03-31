@@ -59,18 +59,6 @@ export default function StudentDashboardLayout({ children }: { children: React.R
             active={pathname === "/dashboard/student/ai-agent"} 
           />
           <NavItem 
-            href="/dashboard/student/profile" 
-            icon={<UserCircle size={20} />} 
-            label="My Profile" 
-            active={pathname === "/dashboard/student/profile"} 
-          />
-          <NavItem 
-            href="/dashboard/student/settings" 
-            icon={<Settings size={20} />} 
-            label="Settings" 
-            active={pathname === "/dashboard/student/settings"} 
-          />
-          <NavItem 
             href="/dashboard/student/career-assistant" 
             icon={<Brain size={20} />} 
             label="AI Career Assistant" 
@@ -81,6 +69,12 @@ export default function StudentDashboardLayout({ children }: { children: React.R
             icon={<Mic size={20} />} 
             label="Mock Interview" 
             active={pathname === "/dashboard/student/mock-interview"} 
+          />
+          <NavItem 
+            href="/dashboard/student/profile" 
+            icon={<UserCircle size={20} />} 
+            label="My Profile" 
+            active={pathname === "/dashboard/student/profile"} 
           />
         </nav>
 
