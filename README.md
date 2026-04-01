@@ -1,12 +1,14 @@
 # VectorHire 🛰️
 
-**VectorHire** is an AI-driven recruitment intelligence platform designed to bridge the gap between candidate resumes and real-time market opportunities. Featuring **Agent Maya**, an autonomous discovery engine, the system crawls professional networks to find, index, and draft applications for high-probability job matches.
+**VectorHire** is an s an AI-driven recruitment intelligence platform designed to seamlessly bridge the gap between candidate resumes and real-time market opportunities.
+
+At the heart of the platform is  n8n Agent, an autonomous discovery engine that continuously crawls professional networks to find, index, and draft highly personalized applications for your best-fit job matches. Stop searching for jobs, and let VectorHire hunt for you.
 
 ## 🚀 The Core Engines
 
 ### 1. Discovery Engine (Hunt & Sync)
 
-Maya analyzes your resume context to perform deep-crawls across professional networks, indexing leads directly into a PostgreSQL cluster.
+The agent analyzes your resume context to perform deep-crawls across professional networks, indexing leads directly into a Supabase for quering by our chat agent apart from this it also stores the data in externalJobs section so the data can be seen in frontend.
 
 ![Discovery Workflow](./public/assets/job-search&&update-workflow.png)
 
@@ -14,12 +16,14 @@ Maya analyzes your resume context to perform deep-crawls across professional net
 ### 2. Action Engine (Draft & Personalize)
 
 Once a job is found, Maya utilizes the job description and your neural profile to generate a "perfect-fit" cold email draft.
+
 ![Drafting Workflow](./public/assets/creating-draft-workflow.png)
 
 
 ### 3. AI Carrer Assistant Workflow
 
-A chatbot feature
+There is a chat-assistant page in our platfrom whereby if you send some query it goes to n8n agent and it does embedding of it with hugging face and runs a query in our database making the 
+
 ![Drafting Workflow](./public/assets/ai-career-assistant-workflow.png)
 ---
 
@@ -32,10 +36,12 @@ A chatbot feature
 
 ## 🛠️ Tech Stack
 
-* **Frontend:** Next.js 15+ (App Router), Tailwind CSS, Framer Motion, Lucide Icons.
+* **Frontend:** Next.js (App Router), Tailwind CSS, Framer Motion, Lucide Icons.
 * **Backend:** Node.js, Prisma ORM, PostgreSQL.
 * **Automation:** n8n (Self-hosted), Gemini 1.5 Flash (via Google AI Studio).
-* **Communication:** RESTful APIs, Webhooks.
+* **Database:** Neon(Postgres)
+* **Communication:** Webhooks.
+* **Pdf Upload:** UploadThing
 
 ## ⚙️ Architecture & n8n Integration
 
